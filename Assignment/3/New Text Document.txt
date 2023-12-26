@@ -1,0 +1,3 @@
+arn:aws:iam::562594088589:role/EC2InstanceProfileRole
+
+arn:aws:s3:::reportbucket385

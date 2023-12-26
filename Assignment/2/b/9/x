@@ -1,0 +1,266 @@
+1)	Create a deployment named nginx-<srn> with image as nginx.
+2)	Expose the deployment which automatically creates the service to be exposed
+3)	The service should be of type NodePort or LoadBalancer 
+4)	Windows users should access the service using the external IP address(in case of LoadBalancer service) or the IP Address used by minikube to tunnel(NOT minikube IP)(in case of NodePort service). This is because the direct IP of docker containers is not available on Windows.
+5)	VM/Linux users should access the service using external IP address(in case of LoadBalancer service) or minikube IP address(in case of NodePort service).
+cloud computing
+
+To complete the requested tasks, you will need to use Kubernetes commands. Here are the steps to follow:
+
+    Create the deployment:
+
+lua
+
+kubectl create deployment nginx-<srn> --image=nginx
+
+Replace <srn> with your desired suffix for the deployment name.
+
+    Expose the deployment:
+
+css
+
+kubectl expose deployment nginx-<srn> --type=NodePort --port=80
+
+This will create a service with a randomly assigned nodePort.
+
+    Optionally, you can expose the service as a LoadBalancer instead:
+
+css
+
+kubectl expose deployment nginx-<srn> --type=LoadBalancer --port=80 --target-port=80
+
+This will create a LoadBalancer service that can be used to access the application externally.
+
+    To get the external IP address for the service, you can use the following command:
+
+csharp
+
+kubectl get services nginx-<srn>
+
+This will display the external IP address for the LoadBalancer service (if created) or the NodePort assigned to the service.
+
+For Windows users, to access the service created by NodePort, you will need to use the IP address of the Minikube tunnel instead of the Minikube IP address. To get the IP address of the Minikube tunnel, you can use the following command:
+
+javascript
+
+minikube tunnel --cleanup=false
+
+This will create a tunnel to expose the cluster to your local machine, and the IP address displayed in the console can be used to access the service.
+
+For Linux users, you can use
+Sanmat Sanjayakumar Payagoudar
+how  to get minikube tunnel ip address
+
+To get the IP address of the Minikube tunnel, you can use the following command in your terminal or command prompt:
+
+javascript
+
+minikube tunnel --cleanup=false
+
+This command starts the minikube tunnel process, which sets up a network tunnel between your host machine and the Kubernetes cluster running in Minikube. The --cleanup=false flag tells Minikube not to automatically remove the tunnel when you're finished with it.
+
+After running this command, Minikube will output the IP address of the tunnel. It should look something like this:
+
+vbnet
+
+❗  Because you are using a Docker driver on darwin, the terminal needs to be open to run it.
+      minikube tunnel
+
+❗  This terminal will now be blocked, and won't accept new input.
+    If you want to run the tunnel on a background terminal, then use 'minikube tunnel > /dev/null 2>&1 &'
+
+Status:
+        machine: minikube
+        pid: 5512
+        route: 10.96.0.0/12 -> 192.168.65.3
+        minikube: Running
+        services: []
+    errors: []
+    🏃  Starting tunnel for service default/nginx-<srn>:<node_port>
+    |-----------|-----------------------|-------------|------------------------|
+    | NAMESPACE |          NAME         | TARGET PORT |          URL           |
+    |-----------|-----------------------|-------------|------------------------|
+    | default   | nginx-<srn>            |        80   | http://127.0.0.1:<node_port> |
+    |-----------|-----------------------|-------------|------------------------|
+    🎉  Opening service default/nginx-<srn> in default browser...
+
+Look for the line that says | default | nginx-<srn> | 80 | http://127.0.0.1:<node_port> | to find the IP address. The node_port value shown here is the port that the service is exposed on, and 127.0.0.1 is the loopback address for your local machine. You can use the IP address shown by the minikube tunnel command to access the service externally.
+
+
+
+
+
+
+
+
+
+-------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+Windows users should access the service using the external IP address(in case of LoadBalancer service) or the IP Address used by minikube to tunnel(NOT minikube IP)(in case of NodePort service). 
+cloud computing
+
+When deploying a Kubernetes service on a cloud platform, such as in the case of LoadBalancer or NodePort services, Windows users may need to access the service using different IP addresses depending on the type of service.
+
+For a LoadBalancer service, the external IP address of the service should be used. This external IP address is typically assigned by the cloud platform's load balancer and can be obtained by running the following command:
+
+csharp
+
+kubectl get services <service-name>
+
+This will display the external IP address of the LoadBalancer service, which Windows users can use to access the service.
+
+For a NodePort service, Windows users should use the IP address used by minikube to tunnel, rather than the minikube IP address itself. To obtain the IP address used by minikube to tunnel, run the following command:
+
+minikube ip
+
+This will display the IP address that Windows users should use to access the NodePort service.
+
+In summary, Windows users should access a LoadBalancer service using the external IP address and a NodePort service using the IP address used by minikube to tunnel.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-----------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+Create a deployment named nginx-<srn> with image as nginx.
+
+I'm sorry, but I am not capable of performing actions as I am a language model. However, I can provide you with the necessary steps to create a deployment named nginx-<srn> with the image as nginx in Kubernetes:
+
+To create a deployment in Kubernetes, follow the steps below:
+
+    Create a deployment YAML file with
+
+Sanmat Sanjayakumar Payagoudar
+1)	Create a deployment named nginx-<srn> with image as nginx.
+cloud computing
+
+To create a deployment named nginx-<srn> with image as nginx in Kubernetes, you can follow the steps below:
+
+    Open a text editor and create a new file called nginx-deployment.yaml.
+    Add the following YAML code to the file:
+
+yaml
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-<srn>
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx
+
+    Replace <srn> in the metadata.name field with your desired SRN value.
+    Save the file and close the text editor.
+    Open a terminal or command prompt and navigate to the directory where the nginx-deployment.yaml file is located.
+    Run the following command to create the deployment:
+
+kubectl apply -f nginx-deployment.yaml
+
+This will create a deployment named nginx-<srn> with one replica and the Nginx image as the container.
+Sanmat Sanjayakumar Payagoudar
+2)	Expose the deployment which automatically creates the service to be exposed
+cloud computing
+
+To expose the deployment and create a service in Kubernetes, follow the steps below:
+
+    Open a text editor and create a new file called nginx-service.yaml.
+    Add the following YAML code to the file:
+
+yaml
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-service
+spec:
+  selector:
+    app: nginx
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: 80
+  type: ClusterIP
+
+    Save the file and close the text editor.
+    Open a terminal or command prompt and navigate to the directory where the nginx-service.yaml file is located.
+    Run the following command to create the service:
+
+kubectl apply -f nginx-service.yaml
+
+This will create a service named nginx-service that selects the nginx deployment and exposes it on port 80. The type: ClusterIP specifies that the service is only accessible within the cluster.
+
+Note: If you want to expose the service outside of the cluster, you can change the type field to NodePort or LoadBalancer. For example, to expose the service on a specific node port, you can change the type field to NodePort and add the nodePort field to the ports section. To expose the service on a load balancer, you can change the type field to LoadBalancer.
+
+
+
+
+
+
+
+------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+how to access the services by ip address
+cloud computing
+
+Accessing services by IP address in cloud computing typically depends on the type of service you are trying to access and the cloud provider you are using. Here are some general steps you can follow:
+
+    Identify the IP address of the service you want to access. This may involve looking up the IP address in your cloud provider's documentation or using a network scanning tool to discover the IP address.
+
+    Determine if the service you want to access is publicly accessible or if it is only accessible within your cloud provider's network. If the service is not publicly accessible, you may need to use a VPN or other network access solution to connect to your cloud provider's network.
+
+    If the service is publicly accessible, you can typically access it by entering the IP address into your web browser or other client software. Depending on the service, you may need to provide additional authentication credentials or configure your client software to connect to the service.
+
+    If the service is not publicly accessible, you may need to use a remote desktop connection or other remote access solution to connect to a virtual machine or other cloud resource that has access to the service.
+
+Note that accessing services by IP address can sometimes be less secure than using domain names or other higher-level abstractions. Make sure to follow best practices for network security and access control to minimize the risk of unauthorized access to your cloud resources.

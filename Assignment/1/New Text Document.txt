@@ -1,0 +1,83 @@
+import json
+
+def lambda_handler(event, context):
+    # TODO implement
+    return {
+        'statusCode': 200,
+        'body': json.dumps('Hello from Lambda!')
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+import json
+import csv
+import base64 as b64
+def lambda_handler(event, context):
+    # Check the request type
+    if event['httpMethod'] == 'GET':
+        # Get the value of the "key" query parameter
+        key = event['queryStringParameters']['key']
+        # Return the response
+        return {
+            'statusCode': 200,
+            'body': json.dumps('PES1UG20CS010 : ' + key)
+        }
+    elif event['httpMethod'] == 'POST':
+        csv_file = event['body']
+        csv = b64.b64decode(csv_file).decode('utf-8').split("\r\n")
+        n = len(csv[4].split(','))
+        l = [0]*n
+        m = len(csv)-8
+        c = []
+        h = csv[4].split(',')
+        for i in range(5, len(csv)-3):
+            c = csv[i].split(',')
+            for j in range(n):
+                l[j] += int(c[j])
+        result = {}
+        for i in range(n):
+            l[i]/=m
+        for i in range(n):
+            result[h[i]] = l[i]
+
+        return {
+            'statusCode': 200,
+            'body': json.dumps(result)
+            }
+    else:
+        # Reject all other request types
+        return {
+            'statusCode': 400,
+            'body': 'Only GET and POST are supported'
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+https://2klyiy6lbh.execute-api.us-west-2.amazonaws.com/default/PES1UG20CS385?key=HashCode11.0isComingSoon_PIL
